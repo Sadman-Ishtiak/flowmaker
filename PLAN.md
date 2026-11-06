@@ -767,3 +767,4 @@ Function-specific:
 - [ ] Bad input produces a friendly one-line error with a line number
 - [ ] README shows one example source next to its rendered image,
       plus a note on the page-splitting flags
+
