@@ -2,3 +2,7 @@ START
 SET factorial = 1
 INPUT n
 SET counter = 1
+WHILE counter < n
+    SET factorial = factorial * counter
+    SET counter = counter + 1
+ENDWHILE
