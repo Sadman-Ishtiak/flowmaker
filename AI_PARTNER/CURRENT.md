@@ -1,5 +1,8 @@
 # flowmaker — Current objective
 
+> Lives in `AI_PARTNER/` — the working documents shared with the AI pair
+> programmer. The public face of the project is the root `README.md`.
+
 **Objective: M0 — Bootstrap (one-time setup)** — finish the runnable,
 testable skeleton before any real feature work. Two tasks remain: **M0.1**
 (the §2 skeleton) and **M0.4** (the import smoke test). Read §2 of

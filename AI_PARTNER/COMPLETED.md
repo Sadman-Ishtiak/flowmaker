@@ -1,5 +1,8 @@
 # flowmaker — Completed work
 
+> Lives in `AI_PARTNER/` — the working documents shared with the AI pair
+> programmer. The public face of the project is the root `README.md`.
+
 A running log of finished work. Workflow when a task is done: tick its box
 in `PLAN.md` §3, add a line here, and point `CURRENT.md` at the next task.
 

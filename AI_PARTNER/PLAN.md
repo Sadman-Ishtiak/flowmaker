@@ -1,5 +1,8 @@
 # flowmaker — Project Plan
 
+> Lives in `AI_PARTNER/` — the working documents shared with the AI pair
+> programmer. The public face of the project is the root `README.md`.
+
 Turn simple pseudocode (`.flow` files) into flowchart diagrams (SVG / PNG).
 
 **Entry point: one `main.py`.** Run it with an optional directory argument —
