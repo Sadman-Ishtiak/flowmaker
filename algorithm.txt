@@ -1,0 +1,4 @@
+START
+SET factorial = 1
+INPUT n
+SET counter = 1
