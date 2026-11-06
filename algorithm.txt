@@ -6,3 +6,5 @@ WHILE counter < n
     SET factorial = factorial * counter
     SET counter = counter + 1
 ENDWHILE
+OUTPUT factorial
+END
