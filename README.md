@@ -47,11 +47,11 @@ What exists today:
   with a timestamped message, and pushes to GitHub (run
   `./autopush.sh`; `AUTOPUSH_INTERVAL=10 ./autopush.sh` for a faster
   loop)
-- `PLAN.md` — the full project plan: language spec, data model, 96
+- `AI_PARTNER/PLAN.md` — the full project plan: language spec, data model, 96
   micro-tasks across milestones M0–M9, layout recipe, pagination
   design, gotchas
-- `CURRENT.md` / `COMPLETED.md` — work-tracking log pointing at the
-  next micro-task
+- `AI_PARTNER/CURRENT.md` / `AI_PARTNER/COMPLETED.md` — work-tracking
+  log pointing at the next micro-task
 
 Milestones:
 
@@ -108,7 +108,7 @@ FUNC fib(n)
 ENDFUNC
 ```
 
-Full statement reference: `PLAN.md` §1.
+Full statement reference: `AI_PARTNER/PLAN.md` §1.
 
 ## Usage (target — not implemented yet)
 
@@ -135,11 +135,13 @@ python main.py  # currently prints a placeholder message
 
 Project docs:
 
-- `PLAN.md` — the plan of record: language (§1), data model + layout
-  (§2), milestones (§3), layout recipe (§4), pagination (§5), SVG
-  notes (§6), gotchas (§7), definition of done (§8)
-- `CURRENT.md` — the current objective and step-by-step instructions
-- `COMPLETED.md` — log of finished work
+- `AI_PARTNER/PLAN.md` — the plan of record: language (§1), data
+  model + layout (§2), milestones (§3), layout recipe (§4),
+  pagination (§5), SVG notes (§6), gotchas (§7), definition of done
+  (§8)
+- `AI_PARTNER/CURRENT.md` — the current objective and step-by-step
+  instructions
+- `AI_PARTNER/COMPLETED.md` — log of finished work
 
 ## License
 
