@@ -4,6 +4,10 @@ from pathlib import Path
 
 def arg_given_function():
     default = Path(__file__).resolve().parent / "algorithm.txt"
+    if not default.is_file() :
+        print("No input found please put algorithm.txt next to main.py or pass a directory")
+        sys.exit(2)
+    print(f"Would convert : {default}")
 
 
 def no_args_function():
