@@ -14,7 +14,13 @@ def arg_given_function(arg):
     directory = Path(arg)
     if not directory.is_dir():
         print(f"{arg} is not a directory")
-
+        sys.exit(2)
+    files = sorted(directory.glob("*.flow"))
+    if not files:
+        print(f"No .flow files are in the {directory}")
+        return
+    for f in files:
+        print(f"Would convert : {f}")
 
 if __name__ == "__main__" :
     print("This is the tkinter user interface program that is going to work as an interactive development environment for the flowmaker.")
