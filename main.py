@@ -1,7 +1,9 @@
 import sys
+from pathlib import Path
+
 
 def arg_given_function():
-    ...
+    default = Path(__file__).resolve().parent / "algorithm.txt"
 
 
 def no_args_function():
