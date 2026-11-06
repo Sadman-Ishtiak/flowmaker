@@ -1,9 +1,10 @@
 import sys
 
-def no_args_function():
+def arg_given_function():
     ...
 
-def arg_given_function():
+
+def no_args_function():
     ...
 
 if __name__ == "__main__" :
