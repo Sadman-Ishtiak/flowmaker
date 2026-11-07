@@ -23,8 +23,6 @@ def arg_given_function(arg):
         print(f"Would convert : {f}")
 
 if __name__ == "__main__" :
-    print("This is the tkinter user interface program that is going to work as an interactive development environment for the flowmaker.")
-    print(sys.argv)
     if len(sys.argv) == 1 :
         no_args_function()
     elif len(sys.argv) == 2:
