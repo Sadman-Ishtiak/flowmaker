@@ -3,10 +3,9 @@
 > Lives in `AI_PARTNER/` — the working documents shared with the AI pair
 > programmer. The public face of the project is the root `README.md`.
 
-**Objective: M1 — Parser.** Current task: **M1.3 — `split_keyword(line)` in
-`flowmaker/parser.py`**. Read §1 of `PLAN.md` (keywords are
-case-insensitive; one statement per line). Work from the project root with
-the venv active:
+**Objective: M1 — Parser.** Current task: **M1.4 — `parse_assignment(rest)`
+in `flowmaker/parser.py`**. Read §1 of `PLAN.md` (assignments) and §7
+(the `==` gotcha). Work from the project root with the venv active:
 
 ```zsh
 cd /home/sadman/Desktop/code/lab/flowmaker
@@ -19,50 +18,59 @@ source venv/bin/activate
 - ✅ **M1.1 done** — `FlowSyntaxError(message, line)`; `str()` prints
   `line N: message`; verified
 - ✅ **M1.2 done** — `strip_comment(line)`; quote-aware; 7 asserts pass
-- ⬜ M1.3 `split_keyword` — not started (this task)
-- ⬜ M1.4 onward — untouched
+- ✅ **M1.3 done** — `split_keyword(line)` → `(keyword, rest)`; blanks and
+  `#`-lines return `None`; all asserts + `pytest` `2 passed`
+- ⬜ M1.4 `parse_assignment` — not started (this task)
+- ⬜ M1.5 onward — untouched
 
-## What to do now — M1.3, step by step
+## What to do now — M1.4, step by step
 
-1. Add `split_keyword(line)` to `flowmaker/parser.py` (below
-   `strip_comment`). Contract from PLAN.md §3:
-   - `split_keyword(line)` → `(keyword, rest)`: the first word lowercased
-     (case-insensitive dispatch: `IF` = `if`), everything after the first
-     space is `rest`
-   - the plan writes the return as `(keyword, rest, line_no)`; the line
-     number is attached by M1.12's caller, the only place that knows it —
-     the helper stays two-valued (decision recorded here so M1.12 is not
-     surprised)
-   - blank input — empty or whitespace-only, which includes lines that
-     were only a comment before `strip_comment` ran — returns `None`;
-     that is how the caller skips such lines
-   - `rest` is `''` when the line is the keyword alone (`STOP`)
-   - raises nothing; unknown keywords are the caller's problem (M1.12)
-2. Verify from the venv:
+1. Read PLAN.md §7 first — it holds the `==` gotcha this task exists for:
+   a bare line like `x == 5` is a *condition*, not an assignment, and must
+   NOT match. The trick: an `=` only counts when it is NOT followed by
+   another `=` (a negative lookahead in regex, or the equivalent
+   plain-Python check).
+2. Add `parse_assignment(rest)` to `flowmaker/parser.py`. Contract:
+   - input: `rest` — everything after the keyword `set`, or the whole
+     stripped line for a bare assignment (`x = 1` without `SET`)
+   - accepts: `x = expr`, `x += expr`, `x -= expr`, `x *= expr`,
+     `x /= expr`, `x %= expr`, and indexed targets `arr[i] = expr`
+   - rejects (raise `FlowSyntaxError`): nothing on the right of the
+     operator, nothing on the left, no operator at all, and a line whose
+     operator is actually `==` (comparison, not assignment)
+   - returns a dict for now — `{"kind": "assignment", "target": ...,
+     "op": ..., "expr": ...}` — the statement tree gets finalised with
+     M1.12; expression text stays opaque (never evaluated, per §1)
+   - whitespace-flexible around the operator; expression and target keep
+     their inner spacing exactly as written
+3. Verify from the venv:
 
    ```zsh
    python -c "
-   from flowmaker.parser import split_keyword
-   assert split_keyword('SET x = 1') == ('set', 'x = 1')
-   assert split_keyword('  if x > 0 then') == ('if', 'x > 0 then')
-   assert split_keyword('stop') == ('stop', '')
-   assert split_keyword('') is None
-   assert split_keyword('   ') is None
-   assert split_keyword('# only a comment') is None
-   print('ok')"
+   from flowmaker.parser import parse_assignment
+   a = parse_assignment('x = 1')
+   assert a == {'kind': 'assignment', 'target': 'x', 'op': '=', 'expr': '1'}
+   assert parse_assignment('y += n * 2')['op'] == '+='
+   assert parse_assignment('arr[i] = fib(n)')['target'] == 'arr[i]'
+   assert parse_assignment('x=1')['op'] == '='
+   try:
+       parse_assignment('x == 5')
+       print('BAD: == accepted')
+   except Exception:
+       print('ok')"
    ```
 
-   Expected: `ok`. Then `pytest` — still `2 passed`.
-3. Bookkeeping: tick M1.3 in `PLAN.md` §3, log it in `COMPLETED.md`,
-   repoint this file at **M1.4 — `parse_assignment`** (`SET x = e` / bare
-   `x = e`, the `==` negative-lookahead gotcha from §7, compound ops,
-   `arr[i]`).
+   Expected: `ok` (the last check proves `==` is rejected). Then
+   `pytest` — still `2 passed`.
+4. Bookkeeping: tick M1.4 in `PLAN.md` §3, log it in `COMPLETED.md`,
+   repoint this file at **M1.5 — `parse_simple`** (`INPUT`, `OUTPUT`,
+   `CALL`, `BREAK`, `CONTINUE`, `STOP` — one node type each).
 
 ## Why this tiny task next
 
-`split_keyword` is the router every other parser piece plugs into: M1.4
-and M1.5 each receive `(keyword, rest)` and handle only their own keyword;
-case-insensitivity lives here exactly once, not in every handler.
+Assignments are the most common statement in real pseudocode, and the `==`
+gotcha is the only real trap in the parser worth isolating in its own
+task. Get this one right and M1.5's simple statements are trivial.
 
 ## M1 roadmap (after M1.3, in order)
 

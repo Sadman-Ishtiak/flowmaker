@@ -201,7 +201,7 @@ and §5 before starting M6. Each group ends with its acceptance check.
       `line N: message`
 - [x] M1.2 `strip_comment(line)` — quote-aware: `#` inside `"..."` is not a
       comment
-- [ ] M1.3 `split_keyword(line)` → `(keyword, rest, line_no)`; lowercases the
+- [x] M1.3 `split_keyword(line)` → `(keyword, rest, line_no)`; lowercases the
       keyword for case-insensitive dispatch; blank/comment-only lines skipped
 - [ ] M1.4 `parse_assignment` — accepts `SET x = expr` and bare `x = expr`;
       assignment detection needs a negative lookahead for `==` (§7 gotcha);

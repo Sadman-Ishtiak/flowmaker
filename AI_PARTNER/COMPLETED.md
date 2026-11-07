@@ -100,6 +100,15 @@ in `PLAN.md` §3, add a line here, and point `CURRENT.md` at the next task.
       `cat` heredoc, `nor` for `not`, `lstrip` where `rstrip` was meant —
       the last one caught by asserting indented no-comment lines survive
       intact). Verified: 7 asserts pass, `pytest` still `2 passed`
+- [x] M1.3 done: `split_keyword(line)` in `flowmaker/parser.py` — blank or
+      whitespace-only input returns `None` (how the caller skips
+      comment-only lines), a leading `#` also returns `None` (defensive:
+      the second check was added after the first verify run failed on
+      `'# only a comment'`), `split(" ", 1)` keeps inner spaces of `rest`,
+      the keyword is lowercased once. Verified: 6 asserts + regression on
+      M1.1/M1.2 all pass, `pytest` still `2 passed`. Note for M1.12: the
+      helper returns `(keyword, rest)` — the plan's `line_no` third slot
+      gets attached by the caller, which is the only place that knows it
 
 ### Audit (2026-11-06)
 - [x] Full verification sweep of the project state against these three
