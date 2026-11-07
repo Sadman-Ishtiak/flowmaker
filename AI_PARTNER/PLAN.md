@@ -180,7 +180,7 @@ you can finish and verify in a single sitting. Read §4 before starting M3
 and §5 before starting M6. Each group ends with its acceptance check.
 
 ### M0 — Bootstrap (one-time setup)
-- [ ] M0.1 Create the skeleton from the §2 layout: `main.py` with a stub
+- [x] M0.1 Create the skeleton from the §2 layout: `main.py` with a stub
       `main()` that accepts an optional positional dir argument and falls
       back to `algorithm.txt` next to `main.py`, the empty `flowmaker/`
       package (`__init__.py` only — no `__main__.py`, no `cli.py`), empty
@@ -192,7 +192,7 @@ and §5 before starting M6. Each group ends with its acceptance check.
       the PDF surface (`PDFSurface`, `set_size`, `show_page` — verified).
       pycairo is **dropped from the plan**: it needs system cairo headers
       to build and adds nothing cairocffi doesn't already provide
-- [ ] M0.4 Write `tests/test_imports.py` importing every module — pytest then
+- [x] M0.4 Write `tests/test_imports.py` importing every module — pytest then
       catches stray syntax errors after each edit (§7 "compile early, often")
 - Acceptance: `pytest` collects (even an empty suite) and `python main.py` runs.
 

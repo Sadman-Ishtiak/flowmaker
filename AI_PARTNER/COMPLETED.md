@@ -64,17 +64,24 @@ in `PLAN.md` §3, add a line here, and point `CURRENT.md` at the next task.
       verified in the venv) for PDF export instead, so nothing more to
       install; PDF export is now part of the cairosvg dependency set
 
-### Code (M0 in progress — as of 2026-11-06)
-- [x] The user began M0.1 by hand: deleted the top-level `flowmaker.py`
-      placeholder, created the `flowmaker/` package with an empty
-      `__init__.py`, and created empty `tests/` and `examples/`
-      directories
-- [ ] Still open in M0.1: `main.py` is still the template placeholder —
-      it must become the stub CLI (optional dir argument,
-      `algorithm.txt` fallback, friendly exit-2 errors)
-- [ ] Still open in M0.1: `algorithm.txt` exists but is 0 bytes — it
-      needs the §1 sample content
-- [ ] M0.4 not started: `tests/test_imports.py` (import smoke test)
+### Code (M0 complete — 2026-11-07)
+- [x] M0.1 finished: the user rewrote `main.py` into the stub CLI by hand —
+      two small functions (`no_args_function`, `arg_given_function`)
+      dispatched on `len(sys.argv)`, friendly one-line errors via
+      `sys.exit(2)` inside the functions. Style note: no `main(argv=None)`
+      returning an int — that was the plan's hint, the user chose the
+      simpler style; revisit when M5 makes the CLI testable
+- [x] M0.1 verified, all four behaviours: fallback announces `algorithm.txt`
+      (exit 0), empty `examples/` directory (exit 0), nonexistent directory
+      (exit 2), missing `algorithm.txt` (exit 2)
+- [x] M0.1 finished: `algorithm.txt` filled with the §1 factorial sample
+      (START / SET / INPUT / WHILE / OUTPUT / STOP)
+- [x] M0.4 done: `tests/test_imports.py` — two tests (imports of `flowmaker`
+      + `main`; callability of both functions). First attempt was named
+      `tests_imports.py` (pytest only collects `test_*.py` → "collected 0
+      items", exit 5) and its bodies had lost indentation when retyped;
+      renamed and fixed → `2 passed in 0.05s`, exit 0. M0 acceptance holds:
+      pytest collects and `python main.py` runs
 
 ### Audit (2026-11-06)
 - [x] Full verification sweep of the project state against these three
@@ -93,14 +100,9 @@ in `PLAN.md` §3, add a line here, and point `CURRENT.md` at the next task.
 
 ## Not started yet
 
-M0 is partially done: M0.2 and M0.3 are checked (pytest 9.2.0 plus
-cairosvg/cairocffi in the venv, pycairo dropped). Of **M0.1** the user has
-already created the `flowmaker/` package, `tests/`, `examples/` and removed
-the old `flowmaker.py` placeholder; remaining: rewrite `main.py` into the
-stub CLI and fill the (currently empty) `algorithm.txt`. **M0.4** is not
-started.
+**M0 is complete** (M0.1–M0.4 all ticked, 2026-11-07): pytest collects and
+`python main.py` runs.
 
-First pending work: **finish M0.1** (see the step-by-step guide in
-`CURRENT.md`), then **M0.4** (`tests/test_imports.py`). After M0:
-**M1 — Parser**, starting with `FlowSyntaxError` in
-`flowmaker/parser.py`.
+Next up: **M1 — Parser**, starting with **M1.1** — `FlowSyntaxError(message,
+line)` in `flowmaker/parser.py`, whose `str()` prints `line N: message`
+(see the step-by-step guide in `CURRENT.md`).
