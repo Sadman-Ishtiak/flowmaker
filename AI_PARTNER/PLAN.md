@@ -197,7 +197,7 @@ and §5 before starting M6. Each group ends with its acceptance check.
 - Acceptance: `pytest` collects (even an empty suite) and `python main.py` runs.
 
 ### M1 — Parser
-- [ ] M1.1 `FlowSyntaxError(message, line)` in `parser.py`; its `str()` prints
+- [x] M1.1 `FlowSyntaxError(message, line)` in `parser.py`; its `str()` prints
       `line N: message`
 - [ ] M1.2 `strip_comment(line)` — quote-aware: `#` inside `"..."` is not a
       comment

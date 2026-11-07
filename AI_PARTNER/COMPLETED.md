@@ -83,6 +83,15 @@ in `PLAN.md` §3, add a line here, and point `CURRENT.md` at the next task.
       renamed and fixed → `2 passed in 0.05s`, exit 0. M0 acceptance holds:
       pytest collects and `python main.py` runs
 
+### Code (M1 in progress — as of 2026-11-07)
+- [x] M1.1 done: `flowmaker/parser.py` created with `FlowSyntaxError(message,
+      line)` subclassing Exception. `str()` prints `line N: message` (passed
+      to `super().__init__`, so the formatting lives in one place) while
+      `.message` and `.line` stay available as attributes. Two failed
+      attempts first (class header missing / stray space before the colon,
+      nano save lost) — final version written in one piece and verified:
+      assert passes, `pytest` still `2 passed`
+
 ### Audit (2026-11-06)
 - [x] Full verification sweep of the project state against these three
       files: filesystem (only the two stubs + venv exist — no `flowmaker/`
