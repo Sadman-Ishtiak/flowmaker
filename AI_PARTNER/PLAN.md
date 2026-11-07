@@ -153,18 +153,24 @@ SVG output, and short enough to keep edge lines tidy.
 
 ### Project layout
 
+> **2026-11-07 amendment — single file.** User decision (small program,
+> ~500–600 lines total, minimum moving parts): everything lives in one
+> `main.py`, organised as clearly-marked sections in pipeline order. The
+> `flowmaker/` package is retired. Module names in the task list now mean
+> sections of `main.py`.
+
 ```
-main.py        # the whole CLI: optional dir arg (or algorithm.txt next to it),
-               #   pipeline, exit codes, output naming
-flowmaker/     # the library main.py drives (no __main__.py, no cli.py)
-  parser.py    # .flow text -> statement tree (FlowSyntaxError lives here)
-  model.py     # Node / Edge / Flowchart / Document
-  builder.py   # statement tree -> charts (pending-edges wiring, loop stack)
-  layout.py    # back-edge classification, levels/columns, sizes, positions
-  paginate.py  # paper model, band packing, connector stubs, furniture
-  render_svg.py # shapes, edges, text, XML escaping; viewport-parameterised
-  export.py    # PNG via cairosvg, PDF via cairocffi; missing-backend messages
-  gui.py       # optional customtkinter editor + live preview (M8)
+main.py
+  # CLI section      — input resolution, exit codes, output naming
+  # parser section   — .flow text -> statement tree (FlowSyntaxError here)
+  # model section    — Node / Edge / Flowchart / Document
+  # builder section  — statement tree -> charts (pending edges, loop stack)
+  # layout section   — back-edge classification, levels/columns, sizes
+  # pagination       — paper model, band packing, connector stubs
+  # render section   — SVG shapes, edges, text, XML escaping
+  # export section   — PNG via cairosvg, PDF via cairocffi
+  # gui section      — optional customtkinter editor + preview (M8)
+  # guard            — if __name__ == "__main__", always the very bottom
 tests/         # pytest suite incl. golden SVGs
 examples/      # .flow samples, one per feature
 algorithm.txt  # the default input when main.py gets no argument
@@ -178,6 +184,13 @@ Work top to bottom. Every milestone is broken into **micro-tasks**: one
 function, one file, or one install each, so every checkbox is a small unit
 you can finish and verify in a single sitting. Read §4 before starting M3
 and §5 before starting M6. Each group ends with its acceptance check.
+
+> **2026-11-07 amendment — single-file layout:** every module name in the
+> task list (`parser.py`, `model.py`, `builder.py`, `layout.py`,
+> `paginate.py`, `render_svg.py`, `export.py`, `gui.py`) now means a
+> clearly-marked section of `main.py` (see §2). "Write X in parser.py"
+> reads as "write the X section in main.py". The guard
+> `if __name__ == "__main__":` stays the very last thing in the file.
 
 ### M0 — Bootstrap (one-time setup)
 - [x] M0.1 Create the skeleton from the §2 layout: `main.py` with a stub

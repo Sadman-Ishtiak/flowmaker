@@ -100,15 +100,32 @@ in `PLAN.md` §3, add a line here, and point `CURRENT.md` at the next task.
       `cat` heredoc, `nor` for `not`, `lstrip` where `rstrip` was meant —
       the last one caught by asserting indented no-comment lines survive
       intact). Verified: 7 asserts pass, `pytest` still `2 passed`
-- [x] M1.3 done: `split_keyword(line)` in `flowmaker/parser.py` — blank or
-      whitespace-only input returns `None` (how the caller skips
-      comment-only lines), a leading `#` also returns `None` (defensive:
-      the second check was added after the first verify run failed on
-      `'# only a comment'`), `split(" ", 1)` keeps inner spaces of `rest`,
-      the keyword is lowercased once. Verified: 6 asserts + regression on
-      M1.1/M1.2 all pass, `pytest` still `2 passed`. Note for M1.12: the
-      helper returns `(keyword, rest)` — the plan's `line_no` third slot
-      gets attached by the caller, which is the only place that knows it
+- [x] M1.3 done: `split_keyword(line)` in `flowmaker/parser.py` — design
+      improved at the user's suggestion: the function calls
+      `strip_comment(line)` itself, so its contract is "raw line in →
+      (keyword, rest) out" and comment handling lives in exactly one
+      place; the earlier standalone `#`-check became dead code (any
+      comment-only line is already `""` after stripping) and was removed.
+      Blank/whitespace-only input returns `None` (how the caller skips
+      lines), `split(" ", 1)` keeps inner spaces of `rest`, keyword is
+      lowercased once. Verified: 8 asserts (including trailing-comment
+      and quoted-`#` lines) + regression on M1.1/M1.2, `pytest` still
+      `2 passed`. Note for M1.12: returns `(keyword, rest)` — the plan's
+      `line_no` third slot is attached by the caller, the only place
+      that knows it
+
+### Architecture (2026-11-07)
+- [x] **Single-file decision** (user, time-constrained): the whole program
+      lives in one `main.py` (~500–600 lines target), organised as marked
+      sections in pipeline order — CLI, parser, model, builder, layout,
+      pagination, render, export, gui, guard-last. PLAN.md §2 rewritten,
+      §3 carries a global amendment note. Consequences:
+      `flowmaker/` package (parser.py, `__init__.py`) is retired — parser
+      code merges into main.py, then the directory is deleted;
+      `tests/test_imports.py` drops the `import flowmaker` line so the
+      suite stays green; all M1.4+ tasks append to main.py directly, no
+      future big move. Verification (asserts + pytest) is run by the AI
+      partner, not the user — user only hand-types the code blocks
 
 ### Audit (2026-11-06)
 - [x] Full verification sweep of the project state against these three

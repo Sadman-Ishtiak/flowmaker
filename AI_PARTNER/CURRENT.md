@@ -18,53 +18,75 @@ source venv/bin/activate
 - ✅ **M1.1 done** — `FlowSyntaxError(message, line)`; `str()` prints
   `line N: message`; verified
 - ✅ **M1.2 done** — `strip_comment(line)`; quote-aware; 7 asserts pass
-- ✅ **M1.3 done** — `split_keyword(line)` → `(keyword, rest)`; blanks and
-  `#`-lines return `None`; all asserts + `pytest` `2 passed`
-- ⬜ M1.4 `parse_assignment` — not started (this task)
-- ⬜ M1.5 onward — untouched
+- ✅ **M1.3 done** — `split_keyword(line)` → `(keyword, rest)`; runs
+  `strip_comment` itself (raw line in → keyword out); 8 asserts pass
+- ⬜ **Migration task: merge parser into `main.py`** (this task)
+- ⬜ M1.4 `parse_assignment` — next code task, appended to main.py
 
-## What to do now — M1.4, step by step
+## What to do now — merge, step by step
 
-1. Read PLAN.md §7 first — it holds the `==` gotcha this task exists for:
-   a bare line like `x == 5` is a *condition*, not an assignment, and must
-   NOT match. The trick: an `=` only counts when it is NOT followed by
-   another `=` (a negative lookahead in regex, or the equivalent
-   plain-Python check).
-2. Add `parse_assignment(rest)` to `flowmaker/parser.py`. Contract:
-   - input: `rest` — everything after the keyword `set`, or the whole
-     stripped line for a bare assignment (`x = 1` without `SET`)
-   - accepts: `x = expr`, `x += expr`, `x -= expr`, `x *= expr`,
-     `x /= expr`, `x %= expr`, and indexed targets `arr[i] = expr`
-   - rejects (raise `FlowSyntaxError`): nothing on the right of the
-     operator, nothing on the left, no operator at all, and a line whose
-     operator is actually `==` (comparison, not assignment)
-   - returns a dict for now — `{"kind": "assignment", "target": ...,
-     "op": ..., "expr": ...}` — the statement tree gets finalised with
-     M1.12; expression text stays opaque (never evaluated, per §1)
-   - whitespace-flexible around the operator; expression and target keep
-     their inner spacing exactly as written
-3. Verify from the venv:
+1. Open `main.py` in nano. Jump to the guard line with Ctrl+_ (type 28,
+   Enter) — the line that reads `if __name__ == "__main__" :`
+2. **Insert the parser section directly above that line** (so the guard
+   automatically ends up last, per the §2 amendment). The section needs
+   no imports — none of its three pieces use `sys` or `Path`; the
+   imports already at the top of `main.py` cover the CLI section. Type:
 
-   ```zsh
-   python -c "
-   from flowmaker.parser import parse_assignment
-   a = parse_assignment('x = 1')
-   assert a == {'kind': 'assignment', 'target': 'x', 'op': '=', 'expr': '1'}
-   assert parse_assignment('y += n * 2')['op'] == '+='
-   assert parse_assignment('arr[i] = fib(n)')['target'] == 'arr[i]'
-   assert parse_assignment('x=1')['op'] == '='
-   try:
-       parse_assignment('x == 5')
-       print('BAD: == accepted')
-   except Exception:
-       print('ok')"
+   ```python
+   # ---------- parser section (M1) ----------
+
+   class FlowSyntaxError(Exception):
+       def __init__(self, message, line):
+           super().__init__(f"line {line}: {message}")
+           self.message = message
+           self.line = line
+
+
+   def strip_comment(line):
+       in_string = False
+       for index, char in enumerate(line):
+           if char == '"':
+               in_string = not in_string
+           elif char == "#" and not in_string:
+               return line[:index].rstrip()
+       return line.rstrip()
+
+
+   def split_keyword(line):
+       line = strip_comment(line)
+       if not line.strip():
+           return None
+       parts = line.strip().split(" ", 1)
+       keyword = parts[0].lower()
+       rest = parts[1] if len(parts) == 2 else ""
+       return keyword, rest
+
+
    ```
+3. Save (Ctrl+O, Enter), exit (Ctrl+X). `python main.py` must behave
+   exactly as before (announces algorithm.txt; exit 0).
+4. Say "done" — the AI partner verifies, dictates the one-line
+   `tests/test_imports.py` fix (drop `import flowmaker`), and asks
+   before deleting the retired `flowmaker/` directory.
 
-   Expected: `ok` (the last check proves `==` is rejected). Then
-   `pytest` — still `2 passed`.
-4. Bookkeeping: tick M1.4 in `PLAN.md` §3, log it in `COMPLETED.md`,
-   repoint this file at **M1.5 — `parse_simple`** (`INPUT`, `OUTPUT`,
-   `CALL`, `BREAK`, `CONTINUE`, `STOP` — one node type each).
+## Then continue with M1.4 — parse_assignment
+
+Appended to the *new parser section in main.py* (directly above the
+`# guard` block at the bottom of the file — never below it):
+
+```python
+def parse_assignment(rest, line=0):
+    t = rest.strip()
+    if "==" in t:
+        raise FlowSyntaxError("'==' is a comparison, not an assignment", line)
+    for op in ("+=", "-=", "*=", "/=", "%=", "="):
+        if op in t:
+            target, expr = t.split(op, 1)
+            if not target.strip() or not expr.strip():
+                raise FlowSyntaxError("assignment needs a variable and an expression", line)
+            return {"kind": "assignment", "target": target.strip(), "op": op, "expr": expr.strip()}
+    raise FlowSyntaxError("assignment needs an '='", line)
+```
 
 ## Why this tiny task next
 
