@@ -12,4 +12,4 @@ def strip_comment(line):
             in_string = not in_string
         elif char == '#' and not in_string:
             return line[:index].rstrip()
-        return line.lstrip()
+    return line.rstrip()

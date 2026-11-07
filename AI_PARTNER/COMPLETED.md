@@ -92,6 +92,15 @@ in `PLAN.md` §3, add a line here, and point `CURRENT.md` at the next task.
       nano save lost) — final version written in one piece and verified:
       assert passes, `pytest` still `2 passed`
 
+- [x] M1.2 done: `strip_comment(line)` in `flowmaker/parser.py` — a `#` starts
+      a comment only outside `"..."` (an `in_string` flag toggles on each
+      `"`); the comment and the spaces before it are `rstrip()`ed; a line
+      with no comment comes back unchanged, indentation kept. Three paste
+      mishaps fixed along the way (a literal `EOF` line pasted from a
+      `cat` heredoc, `nor` for `not`, `lstrip` where `rstrip` was meant —
+      the last one caught by asserting indented no-comment lines survive
+      intact). Verified: 7 asserts pass, `pytest` still `2 passed`
+
 ### Audit (2026-11-06)
 - [x] Full verification sweep of the project state against these three
       files: filesystem (only the two stubs + venv exist — no `flowmaker/`

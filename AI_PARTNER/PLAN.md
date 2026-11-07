@@ -199,7 +199,7 @@ and §5 before starting M6. Each group ends with its acceptance check.
 ### M1 — Parser
 - [x] M1.1 `FlowSyntaxError(message, line)` in `parser.py`; its `str()` prints
       `line N: message`
-- [ ] M1.2 `strip_comment(line)` — quote-aware: `#` inside `"..."` is not a
+- [x] M1.2 `strip_comment(line)` — quote-aware: `#` inside `"..."` is not a
       comment
 - [ ] M1.3 `split_keyword(line)` → `(keyword, rest, line_no)`; lowercases the
       keyword for case-insensitive dispatch; blank/comment-only lines skipped
